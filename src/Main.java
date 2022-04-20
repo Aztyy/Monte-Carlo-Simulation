@@ -2,9 +2,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class computer {
-    boolean infected;
+    boolean isInfected;
+    boolean wasInfectedOnce;
     computer(){
-        infected = false;
+        isInfected = false;
+        wasInfectedOnce = false;
+    }
+    public void infect() {
+        isInfected = true;
+        wasInfectedOnce = true;
+    }
+    public void repair() {
+        isInfected = false;
+    }
+    public void reset() {
+        isInfected = false;
+        wasInfectedOnce = false;
     }
 }
 
@@ -28,13 +41,17 @@ public class Main {
 
         // Create an arrayList to keep track of the infected computers each day
         ArrayList<Integer> infectedComputers = new ArrayList<>();
-        int day, days=0, numInfected, numInfectedToday, fixedToday;
+        int day, days=0, numInfected, numInfectedToday, fixedToday, uniqueInfected, numAllInfected = 0, totalUniqueInfected = 0;
 
         // Outermost loop runs n times (each iteration is one simulation)
         for(int i = 0; i < n; i++) {
             day = 0;
             numInfected = 1;
-            network[0].infected = true;
+            uniqueInfected = 0;
+            for(computer comp : network) {
+                comp.reset();
+            }
+            network[0].infect();
             infectedComputers.add(0);
             //System.out.println("\n---------- SIMULATION " + i + " ----------");
             // While loop runs until there are no more infected computers (each iteration is one day of the simulation)
@@ -46,9 +63,9 @@ public class Main {
                     for (int l = 0; l < numComputers; l++) {
                         // If that computer isn't already infected, randomly decide if the computer gets infected with
                         // probability: infectProbability
-                        if (!network[l].infected) {
+                        if (!network[l].isInfected) {
                             if (Math.random() <= infectProbability) {
-                                network[l].infected = true;
+                                network[l].infect();
                                 infectedComputers.add(l);
                                 numInfectedToday++;
                             }
@@ -61,7 +78,7 @@ public class Main {
                 // Repairs random computers until there are none left or maximum number of repairs per day reached.
                 while (numInfected > 0 && fixedToday < numRepairs) {
                     int checkID = (int) (Math.random() * infectedComputers.size());
-                    network[infectedComputers.get(checkID)].infected = false;
+                    network[infectedComputers.get(checkID)].repair();
                     infectedComputers.remove(checkID);
                     numInfected--;
                     fixedToday++;
@@ -71,9 +88,21 @@ public class Main {
                 day++;
                 days++;
             }
+            // After each simulation check if every computer was infected and add the unique infected
+            for (computer comp:network) {
+                if(comp.wasInfectedOnce) {
+                    uniqueInfected++;
+                }
+            }
+            if(uniqueInfected == numComputers) {
+                numAllInfected++;
+            }
+            totalUniqueInfected += uniqueInfected;
             //System.out.println("----- SIMULATION "+i+" RESULTS -----");
             //System.out.println("Days: " + day);
         }
-        System.out.println("\nAverage days until virus removed: " + days/n);
+        System.out.println("\nAverage days until virus removed: " + (double)days/n);
+        System.out.println("Probability every computer gets infected once: " + (double)numAllInfected/n);
+        System.out.println("Expected number of infected computers: " + (double) totalUniqueInfected/n);
     }
 }
