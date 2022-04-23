@@ -41,7 +41,7 @@ public class Main {
 
         // Create an arrayList to keep track of the infected computers each day
         ArrayList<Integer> infectedComputers = new ArrayList<>();
-        int day, days=0, numInfected, numInfectedToday, fixedToday, uniqueInfected, numAllInfected = 0, totalUniqueInfected = 0;
+        int day, totalDays=0, numInfected, numInfectedToday, fixedToday, uniqueInfected, numAllInfected = 0, totalUniqueInfected = 0;
 
         // Outermost loop runs n times (each iteration is one simulation)
         for(int i = 0; i < n; i++) {
@@ -64,7 +64,7 @@ public class Main {
                         // If that computer isn't already infected, randomly decide if the computer gets infected with
                         // probability: infectProbability
                         if (!network[l].isInfected) {
-                            if (Math.random() <= infectProbability) {
+                            if (Math.random() < infectProbability) {
                                 network[l].infect();
                                 infectedComputers.add(l);
                                 numInfectedToday++;
@@ -86,7 +86,7 @@ public class Main {
                 //System.out.println("Day: "+day+"    Infected: "+numInfected+" Repaired: "+fixedToday);
                 //System.out.println("Infected Computers: "+infectedComputers);
                 day++;
-                days++;
+                totalDays++;
             }
             // After each simulation check if every computer was infected and add the unique infected
             for (computer comp:network) {
@@ -101,7 +101,7 @@ public class Main {
             //System.out.println("----- SIMULATION "+i+" RESULTS -----");
             //System.out.println("Days: " + day);
         }
-        System.out.println("\nAverage days until virus removed: " + (double)days/n);
+        System.out.println("\nAverage days until virus removed: " + (double)totalDays/n);
         System.out.println("Probability every computer gets infected once: " + (double)numAllInfected/n);
         System.out.println("Expected number of infected computers: " + (double) totalUniqueInfected/n);
     }
