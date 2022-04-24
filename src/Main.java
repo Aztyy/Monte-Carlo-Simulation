@@ -52,7 +52,7 @@ public class Main {
 
         // Create an arrayList to keep track of the infected computers each day
         ArrayList<Integer> infectedComputers = new ArrayList<>();
-        int numTotalDays=0, numInfected, numInfectedToday, numFixedToday, numUniqueInfected, numTotalInfected = 0,
+        int numTotalDays=0, numInfected, numInfectedToday, numFixedToday, numUniqueInfected, numAllInfected = 0,
                 totalUniqueInfected = 0;
 
         // Outermost loop runs n times (each iteration is one simulation)
@@ -104,13 +104,13 @@ public class Main {
                 }
             }
             if(numUniqueInfected == numComputers) {
-                numTotalInfected++;
+                numAllInfected++;
             }
             totalUniqueInfected += numUniqueInfected;
         }
         // Display results after every simulation has run
         System.out.println("\nAverage days until virus removed: " + (double)numTotalDays/n);
-        System.out.println("Probability every computer gets infected once: " + (double)numTotalInfected/n);
+        System.out.println("Probability every computer gets infected once: " + (double)numAllInfected/n);
         System.out.println("Expected number of infected computers: " + (double)totalUniqueInfected/n);
     }
 }
